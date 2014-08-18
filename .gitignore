@@ -1,5 +1,6 @@
-bin
-gen
-.gradle
+.DS_Store
 build
-.settings
+.classpath
+bin/
+gen/
+local.properties
