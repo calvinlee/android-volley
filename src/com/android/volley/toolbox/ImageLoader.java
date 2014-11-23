@@ -15,11 +15,13 @@
  */
 package com.android.volley.toolbox;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
@@ -27,9 +29,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-
-import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Helper that handles loading and caching images from remote URLs.
@@ -107,33 +106,6 @@ public class ImageLoader {
 
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    view.setImageBitmap(response.getBitmap());
-                } else if (defaultImageResId != 0) {
-                    view.setImageResource(defaultImageResId);
-                }
-            }
-        };
-    }
-
-    public static ImageListener getImageListener(final ImageView view,
-            final View loadingView, final int defaultImageResId, final int errorImageResId) {
-        return new ImageListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (loadingView != null) {
-                    loadingView.setVisibility(View.GONE);
-                }
-                if (errorImageResId != 0) {
-                    view.setImageResource(errorImageResId);
-                }
-            }
-
-            @Override
-            public void onResponse(ImageContainer response, boolean isImmediate) {
-                if (loadingView != null) {
-                    loadingView.setVisibility(View.GONE);
-                }
                 if (response.getBitmap() != null) {
                     view.setImageBitmap(response.getBitmap());
                 } else if (defaultImageResId != 0) {
