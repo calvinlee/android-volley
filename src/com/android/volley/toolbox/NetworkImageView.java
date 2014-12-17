@@ -18,6 +18,7 @@ package com.android.volley.toolbox;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
@@ -42,6 +43,7 @@ public class NetworkImageView extends ImageView {
      * Resource ID of the image to be used if the network response fails.
      */
     private int mErrorImageId;
+    private View mLoadingView;
 
     /** Local copy of the ImageLoader. */
     private ImageLoader mImageLoader;
@@ -84,16 +86,23 @@ public class NetworkImageView extends ImageView {
      * Sets the default image resource ID to be used for this view until the attempt to load it
      * completes.
      */
-    public void setDefaultImageResId(int defaultImage) {
+    public NetworkImageView setDefaultImageResId(int defaultImage) {
         mDefaultImageId = defaultImage;
+        return this;
     }
 
     /**
      * Sets the error image resource ID to be used for this view in the event that the image
      * requested fails to load.
      */
-    public void setErrorImageResId(int errorImage) {
+    public NetworkImageView setErrorImageResId(int errorImage) {
         mErrorImageId = errorImage;
+        return this;
+    }
+
+    public NetworkImageView setLoadingView(View loadingView) {
+        mLoadingView = loadingView;
+        return this;
     }
 
     /**
@@ -124,7 +133,7 @@ public class NetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            setDefaultImageOrNull();
+            // setDefaultImageOrNull();
             return;
         }
 
@@ -144,6 +153,9 @@ public class NetworkImageView extends ImageView {
         int maxWidth = wrapWidth ? 0 : width;
         int maxHeight = wrapHeight ? 0 : height;
 
+        if (mLoadingView != null) {
+            mLoadingView.setVisibility(View.VISIBLE);
+        }
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageContainer newContainer = mImageLoader.get(mUrl,
@@ -171,6 +183,9 @@ public class NetworkImageView extends ImageView {
                             return;
                         }
 
+                        if (mLoadingView != null) {
+                            mLoadingView.setVisibility(View.GONE);
+                        }
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
                         } else if (mDefaultImageId != 0) {
