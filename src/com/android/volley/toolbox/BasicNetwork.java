@@ -124,7 +124,9 @@ public class BasicNetwork implements Network {
             } catch (ConnectTimeoutException e) {
                 attemptRetryOnException("connection", request, new TimeoutError());
             } catch (MalformedURLException e) {
-                throw new RuntimeException("Bad URL " + request.getUrl(), e);
+                VolleyLog.e("MalformedURLException, bad url: %s", request.getUrl());
+                throw new NetworkError();
+                // throw new RuntimeException("Bad URL " + request.getUrl(), e);
             } catch (IOException e) {
                 int statusCode = 0;
                 NetworkResponse networkResponse = null;
